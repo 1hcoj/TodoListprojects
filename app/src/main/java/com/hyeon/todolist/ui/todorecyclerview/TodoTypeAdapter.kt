@@ -1,5 +1,6 @@
 package com.hyeon.todolist.ui.todorecyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -15,7 +16,10 @@ class TodoTypeAdapter(val todoTypeList : ArrayList<String>, val listener : OnIte
 
         fun bind(typeName : String,listener: OnItemClickListener,position : Int){
             binding.buttonType.text = typeName
-            binding.layoutButton.setOnClickListener { listener.onItemClick(position) }
+
+            binding.buttonType.setOnClickListener {
+                Log.d("디버그",position.toString())
+                listener.onItemClick(position) }
         }
     }
 

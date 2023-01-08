@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.FragmentHomeBinding
+import com.hyeon.todolist.ui.todorecyclerview.OnItemCheckedChangeListener
 import com.hyeon.todolist.ui.todorecyclerview.OnItemClickListener
 import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
 import com.hyeon.todolist.ui.todorecyclerview.TodoTypeAdapter
@@ -46,6 +47,7 @@ class HomeFragment : Fragment(){
 
         mActivity = activity as MainActivity        // Fragment 와 연결된 Activity Context
 
+        var position : Int = 0
         with(binding){
             /** 단위 ( 월, 주 ) 선택하는 버튼 초기화 및 이벤트 리스너 등록 */
             buttonChangeMW.apply {
@@ -56,6 +58,7 @@ class HomeFragment : Fragment(){
                     setCalendar()
                 }
             }
+
             calendarView.apply{
                 state().edit().setFirstDayOfWeek(Calendar.MONDAY).commit()  // 첫번 째 요일 : 월요일
                 setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))    // 월 ( 한글 Format )
@@ -71,7 +74,7 @@ class HomeFragment : Fragment(){
                 }
             }
 
-            /** 목표 중 할 일을 추가하는 버튼 */
+            /** 각 Type 별로 할 일 리스트를 보여주는 버튼 */
             recyclerviewTodoType.apply {
                 val linearLayoutManager = LinearLayoutManager(mActivity)
                 linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
@@ -79,20 +82,19 @@ class HomeFragment : Fragment(){
                 adapter = TodoTypeAdapter(todoTypeViewModel.todoTypeNameList, object : OnItemClickListener{
                     /** 버튼 클릭 리스너 */
                     override fun onItemClick(position: Int) {
-
+                        setList(position)
                     }
                 })
                 layoutManager = linearLayoutManager
 
             }
 
-            recyclerViewTodoList.apply {
-                adapter = TodoListAdapter(todoListViewModel.todoList[0])
-                layoutManager = LinearLayoutManager(mActivity)
+            setList(0) /** 최초 할 일 */
+
+            /** 할 일 추가 버튼 Listener */
+            buttonAddTodo.setOnClickListener {
+
             }
-
-
-
         }
     }
 
@@ -121,4 +123,16 @@ class HomeFragment : Fragment(){
         }
     }
 
+    /** 각 목표 Type의 할 일 List 를 화면에 출력 */
+    private fun setList(position : Int){
+        binding.recyclerViewTodoList.apply{
+            adapter = TodoListAdapter(todoListViewModel.todoList[position],object: OnItemCheckedChangeListener{
+                override fun onItemCheckedChange(isCheck: Boolean) {
+                    /** Todo 달성 여부 checkBox Event Listener */
+                }
+            })
+            layoutManager = LinearLayoutManager(mActivity)
+        }
+
+    }
 }

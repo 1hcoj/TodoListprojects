@@ -107,8 +107,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"/>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonAddTodo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="할 일 추가 "
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:drawableRight="@drawable/ic_outline_add_circle_outline_12"/>
         </LinearLayout>
-
 
     </ScrollView>
 

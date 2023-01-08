@@ -14,7 +14,5 @@
         android:textSize="12sp"
         android:text=" 운동 "
         android:textColor="@color/black"
-        android:drawableLeft="@drawable/ic_baseline_workspace_premium_12"
-        android:drawableRight="@drawable/ic_outline_add_circle_outline_12" />
-
+        android:drawableLeft="@drawable/ic_baseline_workspace_premium_12"/>
 </LinearLayout>
