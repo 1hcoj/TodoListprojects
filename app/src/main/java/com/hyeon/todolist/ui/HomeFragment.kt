@@ -6,38 +6,32 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.FragmentHomeBinding
-import com.hyeon.todolist.ui.recyclerviewcell.CalendarAdapter
-import com.hyeon.todolist.viewmodel.CalendarCellViewModel
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
+import com.prolificinteractive.materialcalendarview.CalendarDay
+import com.prolificinteractive.materialcalendarview.CalendarMode
+import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
+import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
+import java.util.*
 
 
 class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
+    private lateinit var mActivity : MainActivity
     private var isMonthMode : Boolean = true
-    /** 날짜 정보를 가진 ViewModel */
-    private val calendarCellViewModel by lazy{
-        ViewModelProvider(this)[CalendarCellViewModel::class.java]
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater,container,false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setMonthView()
+
+        mActivity = activity as MainActivity        // Fragment 와 연결된 Activity Context
 
         with(binding){
             /** 단위 ( 월, 주 ) 선택하는 버튼 초기화 및 이벤트 리스너 등록 */
@@ -46,32 +40,32 @@ class HomeFragment : Fragment(){
                 setOnClickListener {
                     isMonthMode = !isMonthMode
                     setButton()
+                    setCalendar()
                 }
             }
-            /** 이전 월 */
-            buttonPre.setOnClickListener {
-                calendarCellViewModel.movePrev()
-                setMonthView()
+            calendarView.apply{
+                state().edit().setFirstDayOfWeek(Calendar.MONDAY).commit()  // 첫번 째 요일 : 월요일
+                setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))    // 월 ( 한글 Format )
+                setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))   // 요일 ( 한글 Format )
+                selectedDate = CalendarDay.today()  // 기본 선택 날짜 : 오늘
+
+                /** 날짜 클릭 (변경)시 Event Listener
+                 *  widget : 달력 ( Material Calendar View ) ,
+                 *  date : 선택 날짜 ( CalendarDay ),
+                 *  selected : 선택 여부 ( Boolean ) */
+                setOnDateChangedListener { widget, date, selected ->
+                    /** To do 목록 변경 */
+                }
             }
-            /** 다음 월 */
-            buttonNext.setOnClickListener {
-                calendarCellViewModel.moveNext()
-                setMonthView()
-            }
+
+
         }
     }
 
-    /** 한달 간격의 일정을 화면에 표시 */
-    private fun setMonthView() {
-        binding.textViewYearMonth.text = calendarCellViewModel.monthYearFromDate()
+    private fun setCalendar() {
+        val calendarMode = if (isMonthMode) CalendarMode.MONTHS else CalendarMode.WEEKS
 
-        val adapter : CalendarAdapter = CalendarAdapter(calendarCellViewModel.daysInMonthArray())
-        val manager : RecyclerView.LayoutManager = GridLayoutManager(activity,7)
-
-        binding.recyclerview.apply {
-            layoutManager = manager
-            setAdapter(adapter)
-        }
+        binding.calendarView.state().edit().setCalendarDisplayMode(calendarMode).commit()
     }
 
     /** 월, 주 캘린더 정보 변경 버튼 클릭시 버튼 변화 */
@@ -92,4 +86,5 @@ class HomeFragment : Fragment(){
             setCompoundDrawablesWithIntrinsicBounds(0, 0, buttonImageRsc, 0)
         }
     }
+
 }
