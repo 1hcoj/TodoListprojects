@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".ui.HomeFragment"
     tools:ignore="SpeakableTextPresentCheck">
 
@@ -60,17 +61,6 @@
             app:layout_constraintStart_toEndOf="@+id/imageView4"
             app:layout_constraintTop_toBottomOf="@+id/imageViewNext" />
 
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="240dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imageViewNext"
-            tools:layout_editor_absoluteY="77dp"
-            tools:src="@tools:sample/avatars" />
-
     </LinearLayout>
 
 
@@ -96,14 +86,27 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:theme="@style/CalenderViewCustom"
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:mcv_headerTextAppearance="@style/CalendarWidgetHeader"
-                app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"/>
+                android:theme="@style/CalenderViewCustom"
+                app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+                app:mcv_headerTextAppearance="@style/CalendarWidgetHeader" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerviewTodoType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTodoList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"/>
+
         </LinearLayout>
 
 

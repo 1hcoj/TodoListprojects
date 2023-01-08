@@ -6,8 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.FragmentHomeBinding
+import com.hyeon.todolist.ui.todorecyclerview.OnItemClickListener
+import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
+import com.hyeon.todolist.ui.todorecyclerview.TodoTypeAdapter
+import com.hyeon.todolist.viewmodel.TodoListViewModel
+import com.hyeon.todolist.viewmodel.TodoTypeViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
@@ -19,6 +26,12 @@ class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
     private lateinit var mActivity : MainActivity
     private var isMonthMode : Boolean = true
+    private val todoTypeViewModel by lazy {
+        ViewModelProvider(this)[TodoTypeViewModel::class.java]
+    }
+    private val todoListViewModel by lazy{
+        ViewModelProvider(this)[TodoListViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,6 +70,27 @@ class HomeFragment : Fragment(){
                     /** To do 목록 변경 */
                 }
             }
+
+            /** 목표 중 할 일을 추가하는 버튼 */
+            recyclerviewTodoType.apply {
+                val linearLayoutManager = LinearLayoutManager(mActivity)
+                linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+                adapter = TodoTypeAdapter(todoTypeViewModel.todoTypeNameList, object : OnItemClickListener{
+                    /** 버튼 클릭 리스너 */
+                    override fun onItemClick(position: Int) {
+
+                    }
+                })
+                layoutManager = linearLayoutManager
+
+            }
+
+            recyclerViewTodoList.apply {
+                adapter = TodoListAdapter(todoListViewModel.todoList[0])
+                layoutManager = LinearLayoutManager(mActivity)
+            }
+
 
 
         }
