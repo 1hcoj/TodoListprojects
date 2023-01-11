@@ -1,7 +1,6 @@
 package com.hyeon.todolist.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,25 +13,18 @@ import com.hyeon.todolist.ui.todorecyclerview.OnItemCheckedChangeListener
 import com.hyeon.todolist.ui.todorecyclerview.OnItemClickListener
 import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
 import com.hyeon.todolist.ui.todorecyclerview.TodoTypeAdapter
-import com.hyeon.todolist.viewmodel.TodoListViewModel
-import com.hyeon.todolist.viewmodel.TodoTypeViewModel
+import com.hyeon.todolist.viewmodel.TodoViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import java.util.*
 
-
 class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
     private lateinit var mActivity : MainActivity
     private var isMonthMode : Boolean = true
-    private val todoTypeViewModel by lazy {
-        ViewModelProvider(this)[TodoTypeViewModel::class.java]
-    }
-    private val todoListViewModel by lazy{
-        ViewModelProvider(this)[TodoListViewModel::class.java]
-    }
+    private lateinit var mTodoViewModel : TodoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,24 +65,26 @@ class HomeFragment : Fragment(){
                     /** To do 목록 변경 */
                 }
             }
-
             /** 각 Type 별로 할 일 리스트를 보여주는 버튼 */
             recyclerviewTodoType.apply {
                 val linearLayoutManager = LinearLayoutManager(mActivity)
                 linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-                adapter = TodoTypeAdapter(todoTypeViewModel.todoTypeNameList, object : OnItemClickListener{
+                adapter = TodoTypeAdapter(object : OnItemClickListener {
+                    /** 버튼 클릭 리스너 */
                     /** 버튼 클릭 리스너 */
                     override fun onItemClick(position: Int) {
-                        setList(position)
+                        //setList(position)
+                        mTodoViewModel.getType(position)
                     }
                 })
                 layoutManager = linearLayoutManager
 
             }
-
+            /*
             setList(0) /** 최초 할 일 */
 
+             */
             /** 할 일 추가 버튼 Listener */
             buttonAddTodo.setOnClickListener {
 
@@ -126,8 +120,9 @@ class HomeFragment : Fragment(){
     /** 각 목표 Type의 할 일 List 를 화면에 출력 */
     private fun setList(position : Int){
         binding.recyclerViewTodoList.apply{
-            adapter = TodoListAdapter(todoListViewModel.todoList[position],object: OnItemCheckedChangeListener{
+            adapter = TodoListAdapter(object: OnItemCheckedChangeListener {
                 override fun onItemCheckedChange(isCheck: Boolean) {
+                    /** Todo 달성 여부 checkBox Event Listener */
                     /** Todo 달성 여부 checkBox Event Listener */
                 }
             })
@@ -135,4 +130,5 @@ class HomeFragment : Fragment(){
         }
 
     }
+
 }

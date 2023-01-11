@@ -2,24 +2,24 @@ package com.hyeon.todolist.ui.todorecyclerview
 
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.hyeon.todolist.data.Todo
+import com.hyeon.todolist.Todo
 import com.hyeon.todolist.databinding.TodotypeItemBinding
 
-class TodoTypeAdapter(val todoTypeList : ArrayList<String>, val listener : OnItemClickListener) : RecyclerView.Adapter<TodoTypeAdapter.TodoTypeViewHolder> (){
+class TodoTypeAdapter(val listener : OnItemClickListener) : RecyclerView.Adapter<TodoTypeAdapter.TodoTypeViewHolder> (){
 
-    class TodoTypeViewHolder(val binding : TodotypeItemBinding): ViewHolder(binding.root){
+    private var todoItems : List<Todo> = listOf()
 
-        fun bind(typeName : String,listener: OnItemClickListener,position : Int){
-            binding.buttonType.text = typeName
+    inner class TodoTypeViewHolder(val binding : TodotypeItemBinding): RecyclerView.ViewHolder(binding.root){
+
+        fun bind(todo : Todo, listener: OnItemClickListener, position : Int){
+            binding.buttonType.text = todo.type
 
             binding.buttonType.setOnClickListener {
                 Log.d("디버그",position.toString())
-                listener.onItemClick(position) }
+                listener.onItemClick(position)
+            }
         }
     }
 
@@ -29,13 +29,13 @@ class TodoTypeAdapter(val todoTypeList : ArrayList<String>, val listener : OnIte
     }
 
     override fun onBindViewHolder(holder: TodoTypeViewHolder, position: Int) {
-        holder.bind(todoTypeList[position],listener,position)
-
+        val todo = todoItems[position]
+        holder.bind(todo,listener,position)
 
     }
 
     override fun getItemCount(): Int {
-        return todoTypeList.size
+        return todoItems.size
     }
 }
 

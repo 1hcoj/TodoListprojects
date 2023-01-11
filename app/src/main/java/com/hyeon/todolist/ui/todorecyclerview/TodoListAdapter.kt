@@ -2,46 +2,43 @@ package com.hyeon.todolist.ui.todorecyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.CompoundButton.OnCheckedChangeListener
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.hyeon.todolist.data.Todo
+import androidx.recyclerview.widget.RecyclerView
+import com.hyeon.todolist.Todo
 import com.hyeon.todolist.databinding.TodolistItemBinding
 
-class TodoListAdapter(var todoList : ArrayList<Todo>,
-                      val checkedChangeListener: OnItemCheckedChangeListener, ) : Adapter<TodoListAdapter.TodoListViewHoler> (){
-
-    class TodoListViewHoler(val binding : TodolistItemBinding) : ViewHolder(binding.root) {
-
+class TodoListAdapter(val checkedChangeListener: OnItemCheckedChangeListener) : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>(){
+    private var todos : List<Todo> = listOf()
+    inner class TodoListViewHolder(val binding : TodolistItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(todo : Todo,
-                 checkedChangeListener : OnItemCheckedChangeListener,){
-
-            binding.checkboxTodo.setOnCheckedChangeListener{ _, isChecked ->checkedChangeListener.onItemCheckedChange(isChecked)}
-            binding.checkboxTodo.isChecked = todo.isDo
+                 checkedChangeListener : OnItemCheckedChangeListener){
+            binding.checkboxTodo.setOnCheckedChangeListener{_,isChecked ->
+                checkedChangeListener.onItemCheckedChange(isChecked)
+            }
+            binding.checkboxTodo.isChecked = todo.isChecked
 
             binding.textViewTodo.text = todo.content
 
-            binding.imageViewMore.setOnClickListener {
+            binding.imageViewMore.setOnClickListener{
 
             }
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHoler {
+    override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : TodoListViewHolder{
         val binding = TodolistItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return TodoListViewHoler(binding)
+        return TodoListViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TodoListViewHoler, position: Int) {
-        holder.bind(todoList[position],checkedChangeListener)
+    override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
+        val todo = todos[position]
+        holder.bind(todo,checkedChangeListener)
     }
 
     override fun getItemCount(): Int {
-        return todoList.size
+        return todos.size
     }
 }
 
 interface OnItemCheckedChangeListener{
     fun onItemCheckedChange(isCheck : Boolean)
 }
+

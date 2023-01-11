@@ -1,7 +1,13 @@
-package com.hyeon.todolist.data
+package com.hyeon.todolist
 
-class Todo(var type : String,
-           var content : String,
-           var isDo : Boolean) {
+import androidx.room.*
 
+@Entity(tableName = "todoTable")
+data class Todo(
+    @ColumnInfo(name = "type") val type : String,
+    @ColumnInfo(name = "content") val content : String,
+    @ColumnInfo(name = "time") val time : String,
+    @ColumnInfo(name = "isChecked") val isChecked : Boolean
+){
+    @PrimaryKey(autoGenerate = true) var id : Int = 0
 }
