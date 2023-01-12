@@ -9,13 +9,14 @@ class TodoRepository (application : Application){
     private lateinit var mTodoDao : TodoDao
     private lateinit var mTodoItems : LiveData<List<Todo>>
     private lateinit var mTodoList : LiveData<List<Todo>>
-    private lateinit var mTodoTypeList : LiveData<List<Todo>>
+    private lateinit var mTodoTypeList : LiveData<List<String>>
 
     /*초기화*/
     init {
         mTodoDatabase = TodoDatabase.getInstance(application)
         mTodoDao = mTodoDatabase.todoDao()
         mTodoItems = mTodoDao.getAll()
+        mTodoTypeList = mTodoDao.getType()
     }
     fun getAll() : LiveData<List<Todo>>{
         return mTodoItems
@@ -35,10 +36,7 @@ class TodoRepository (application : Application){
             mTodoDao.update(dto)
         }.start()
     }
-    fun getType(id : Int) : LiveData<List<Todo>>{
-        Thread{
-            mTodoTypeList = mTodoDao.getType(id)
-        }.start()
+    fun getType() : LiveData<List<String>>{
         return mTodoTypeList
     }
     fun getTodolist(type : String, time : String) : LiveData<List<Todo>>{

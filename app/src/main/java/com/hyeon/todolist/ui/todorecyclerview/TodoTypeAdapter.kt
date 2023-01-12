@@ -4,17 +4,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.hyeon.todolist.Todo
 import com.hyeon.todolist.databinding.TodotypeItemBinding
 
 class TodoTypeAdapter(val listener : OnItemClickListener) : RecyclerView.Adapter<TodoTypeAdapter.TodoTypeViewHolder> (){
 
-    private var todoItems : List<Todo> = listOf()
+    private var todoTypes : List<String> = listOf()
 
     inner class TodoTypeViewHolder(val binding : TodotypeItemBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(todo : Todo, listener: OnItemClickListener, position : Int){
-            binding.buttonType.text = todo.type
+        fun bind(type : String, listener: OnItemClickListener, position : Int){
+            binding.buttonType.text = type
 
             binding.buttonType.setOnClickListener {
                 Log.d("디버그",position.toString())
@@ -29,13 +28,18 @@ class TodoTypeAdapter(val listener : OnItemClickListener) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: TodoTypeViewHolder, position: Int) {
-        val todo = todoItems[position]
+        val todo = todoTypes[position]
         holder.bind(todo,listener,position)
 
     }
 
     override fun getItemCount(): Int {
-        return todoItems.size
+        return todoTypes.size
+    }
+    /** data 변경 시 */
+    fun setTodoTypes(todoTypes : List<String>){
+        this.todoTypes = todoTypes
+        notifyDataSetChanged()
     }
 }
 
