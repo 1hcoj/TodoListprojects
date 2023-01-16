@@ -9,10 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.FragmentHomeBinding
-import com.hyeon.todolist.ui.todorecyclerview.OnItemCheckedChangeListener
-import com.hyeon.todolist.ui.todorecyclerview.OnItemClickListener
 import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
-import com.hyeon.todolist.ui.todorecyclerview.TodoTypeAdapter
 import com.hyeon.todolist.viewmodel.TodoViewModel
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
@@ -65,30 +62,9 @@ class HomeFragment : Fragment(){
                     /** To do 목록 변경 */
                 }
             }
-            /** 각 Type 별로 할 일 리스트를 보여주는 버튼 */
-            recyclerviewTodoType.apply {
-                val linearLayoutManager = LinearLayoutManager(mActivity)
-                linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-                adapter = TodoTypeAdapter(object : OnItemClickListener {
-                    /** 버튼 클릭 리스너 */
-                    /** 버튼 클릭 리스너 */
-                    override fun onItemClick(position: Int) {
-                        //setList(position)
-                        mTodoViewModel.getType(position)
-                    }
-                })
-                layoutManager = linearLayoutManager
-
-            }
-            /*
-            setList(0) /** 최초 할 일 */
-
-             */
-            /** 할 일 추가 버튼 Listener */
-            buttonAddTodo.setOnClickListener {
-
-            }
+            recyclerViewTodoList.adapter = TodoListAdapter(mActivity)
+            recyclerViewTodoList.layoutManager = LinearLayoutManager(mActivity)
         }
     }
 
@@ -118,17 +94,16 @@ class HomeFragment : Fragment(){
     }
 
     /** 각 목표 Type의 할 일 List 를 화면에 출력 */
-    private fun setList(position : Int){
-        binding.recyclerViewTodoList.apply{
-            adapter = TodoListAdapter(object: OnItemCheckedChangeListener {
-                override fun onItemCheckedChange(isCheck: Boolean) {
-                    /** Todo 달성 여부 checkBox Event Listener */
-                    /** Todo 달성 여부 checkBox Event Listener */
-                }
-            })
-            layoutManager = LinearLayoutManager(mActivity)
-        }
-
-    }
+//    private fun setList(position : Int){
+//        binding.recyclerViewTodoList.apply{
+//            adapter = TodoListAdapter(object: OnItemCheckedChangeListener {
+//                override fun onItemCheckedChange(isCheck: Boolean) {
+//                    /** Todo 달성 여부 checkBox Event Listener */
+//                }
+//            })
+//            layoutManager = LinearLayoutManager(mActivity)
+//        }
+//
+//    }
 
 }
