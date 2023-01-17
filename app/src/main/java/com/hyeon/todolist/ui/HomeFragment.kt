@@ -1,16 +1,20 @@
 package com.hyeon.todolist.ui
 
+import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.FragmentHomeBinding
 import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
 import com.hyeon.todolist.viewmodel.TodoViewModel
+import com.hyeon.todolist.viewmodel.TodoViewModelFactory
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
@@ -19,9 +23,13 @@ import java.util.*
 
 class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
-    private lateinit var mActivity : MainActivity
+    private val mActivity : MainActivity by lazy{
+        activity as MainActivity
+    }
     private var isMonthMode : Boolean = true
-    private lateinit var mTodoViewModel : TodoViewModel
+    private val mTodoViewModel : TodoViewModel by activityViewModels {
+        TodoViewModelFactory(activity?.application as Application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,8 +41,6 @@ class HomeFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        mActivity = activity as MainActivity        // Fragment 와 연결된 Activity Context
 
         var position : Int = 0
         with(binding){
@@ -52,18 +58,26 @@ class HomeFragment : Fragment(){
                 state().edit().setFirstDayOfWeek(Calendar.MONDAY).commit()  // 첫번 째 요일 : 월요일
                 setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))    // 월 ( 한글 Format )
                 setWeekDayFormatter(ArrayWeekDayFormatter(resources.getStringArray(R.array.custom_weekdays)))   // 요일 ( 한글 Format )
-                selectedDate = CalendarDay.today()  // 기본 선택 날짜 : 오늘
+                selectedDate = mTodoViewModel.selectedDay
 
                 /** 날짜 클릭 (변경)시 Event Listener
                  *  widget : 달력 ( Material Calendar View ) ,
                  *  date : 선택 날짜 ( CalendarDay ),
                  *  selected : 선택 여부 ( Boolean ) */
-                setOnDateChangedListener { widget, date, selected ->
-                    /** To do 목록 변경 */
+                setOnDateChangedListener { _, calDate, _ ->
+
+                    mTodoViewModel.selectedDay = calDate
+                    // Todo
+                    /** 1. viewModel 의 날짜 데이터 변경
+                     *  2. viewModel 에서 해당 날짜의 List<List<할일>> 을 Adapter 에 넘겨줌
+                     *  3. ui에 출력
+                     * */
+
+
                 }
             }
 
-            recyclerViewTodoList.adapter = TodoListAdapter(mActivity)
+            recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel)
             recyclerViewTodoList.layoutManager = LinearLayoutManager(mActivity)
         }
     }
@@ -92,18 +106,4 @@ class HomeFragment : Fragment(){
             setCompoundDrawablesWithIntrinsicBounds(0, 0, buttonImageRsc, 0)
         }
     }
-
-    /** 각 목표 Type의 할 일 List 를 화면에 출력 */
-//    private fun setList(position : Int){
-//        binding.recyclerViewTodoList.apply{
-//            adapter = TodoListAdapter(object: OnItemCheckedChangeListener {
-//                override fun onItemCheckedChange(isCheck: Boolean) {
-//                    /** Todo 달성 여부 checkBox Event Listener */
-//                }
-//            })
-//            layoutManager = LinearLayoutManager(mActivity)
-//        }
-//
-//    }
-
 }
