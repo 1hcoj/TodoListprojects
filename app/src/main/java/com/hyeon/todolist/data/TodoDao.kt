@@ -9,6 +9,9 @@ interface TodoDao{
     @Query("SELECT * FROM todoTable WHERE type = (:type) AND time = (:time)")
     fun getTodolist(type : String, time : String) : LiveData<List<Todo>>
 
+    @Query("SELECT * FROM todoTable WHERE time = (:time)")
+    fun byTime(time : String) : LiveData<List<Todo>>
+
     @Query("SELECT type FROM todoTable")
     fun getType() : LiveData<List<String>>
 

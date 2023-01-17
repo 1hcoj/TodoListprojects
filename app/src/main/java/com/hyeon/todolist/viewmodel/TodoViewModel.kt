@@ -10,8 +10,7 @@ import com.hyeon.todolist.data.TodoRepository
 
 class TodoViewModel(application : Application) : AndroidViewModel(application) {
     private var mTodoRepository : TodoRepository
-    private lateinit var mTodolist : LiveData<List<Todo>>
-    private lateinit var mTodoTypeList : LiveData<List<String>>
+    private var mTodoTypeList : LiveData<List<String>>
     private var mTodos : LiveData<List<Todo>>
 
     init{
@@ -19,11 +18,11 @@ class TodoViewModel(application : Application) : AndroidViewModel(application) {
         mTodos = mTodoRepository.getAll()
         mTodoTypeList = mTodoRepository.getType()
     }
+    fun byTime(time : String) : LiveData<List<Todo>>{
+        return mTodoRepository.byTime(time)
+    }
     fun getTodolist(type : String, time : String) : LiveData<List<Todo>> {
-        Thread{
-            mTodolist = mTodoRepository.getTodolist(type,time)
-        }.start()
-        return mTodolist
+       return mTodoRepository.getTodolist(type,time)
     }
     fun getType() : LiveData<List<String>> {
         return mTodoTypeList
