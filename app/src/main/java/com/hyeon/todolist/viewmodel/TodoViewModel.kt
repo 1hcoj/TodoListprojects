@@ -1,38 +1,48 @@
 package com.hyeon.todolist.viewmodel
 
 import android.app.Application
+import android.content.ClipData
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hyeon.todolist.Todo
+import com.hyeon.todolist.data.Todo
 import com.hyeon.todolist.data.TodoRepository
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import java.time.LocalDate
 
 class TodoViewModel(application : Application) : AndroidViewModel(application) {
     private var mTodoRepository : TodoRepository
-    private lateinit var mTodolist : LiveData<List<Todo>>
-    private lateinit var mTodoTypeList : LiveData<List<Todo>>
+    private var mTodoTypeList : LiveData<List<String>>
+    private var mTodos : LiveData<List<Todo>>
 
     init{
         mTodoRepository = TodoRepository(application)
+        mTodos = mTodoRepository.getAll()
+        mTodoTypeList = mTodoRepository.getType()
+    }
+    fun byTime(time : String) : LiveData<List<Todo>>{
+        return mTodoRepository.byTime(time)
     }
     fun getTodolist(type : String, time : String) : LiveData<List<Todo>> {
-        Thread{
-            mTodolist = mTodoRepository.getTodolist(type,time)
-        }.start()
-        return mTodolist
+        return mTodoRepository.getTodolist(type,time)
     }
-    fun getType(id : Int) : LiveData<List<Todo>> {
-        Thread{
-            mTodoTypeList = mTodoRepository.getType(id)
-        }.start()
+    fun getType() : LiveData<List<String>> {
         return mTodoTypeList
+    }
+    fun getAll() : LiveData<List<Todo>> {
+        return mTodos
+    }
+    fun getTodo(type:String,content: String) : LiveData<Todo>{
+        return mTodoRepository.getTodo(type,content,selectedDayFormat)
     }
 
     fun insert(todo : Todo){
         mTodoRepository.insert(todo)
+    }
+
+    fun insert(type : String, content : String, isChecked : Boolean){
+        mTodoRepository.insert(Todo(type,content,selectedDayFormat,isChecked))
     }
 
     fun delete(todo : Todo){
@@ -43,21 +53,20 @@ class TodoViewModel(application : Application) : AndroidViewModel(application) {
         mTodoRepository.update(todo)
     }
 
-    var selectedDay  = CalendarDay.today()
 
-    var selectedDayFormat = (selectedDay.toString()).apply {
-        substring(12,this.length-1)
-    }
+    var selectedDay:CalendarDay = CalendarDay.today()
 
-
-}
-
-class TodoViewModelFactory(private val application: Application) : ViewModelProvider.Factory{
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(TodoViewModel::class.java)){
-            @Suppress("UNCHECKED_CAST")
-            return TodoViewModel(application) as T
-        }
-        throw IllegalAccessException("Unknown ViewModel Class")
+    var selectedDayFormat:String = selectedDay.toString().apply {
+        substring(12,length-1)
     }
 }
+//
+//class TodoViewModelFactory(private val application: Application) : ViewModelProvider.Factory{
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if(modelClass.isAssignableFrom(TodoViewModel::class.java)){
+//            @Suppress("UNCHECKED_CAST")
+//            return TodoViewModel(application) as T
+//        }
+//        throw IllegalAccessException("Unknown ViewModel Class")
+//    }
+//}

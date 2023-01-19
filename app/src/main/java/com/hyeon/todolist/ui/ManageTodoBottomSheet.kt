@@ -11,14 +11,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.BottomSheetManageTodoBinding
 import com.hyeon.todolist.viewmodel.TodoViewModel
-import com.hyeon.todolist.viewmodel.TodoViewModelFactory
 
 class ManageTodoBottomSheet(val itemClick : (String)-> Unit) : BottomSheetDialogFragment() {
     lateinit var binding : BottomSheetManageTodoBinding
 
-    private val viewModel : TodoViewModel by activityViewModels{
-        TodoViewModelFactory((activity?.application) as Application)
-    }
+    private lateinit var viewModel: TodoViewModel
 
     companion object{
         const val TAG = "ManageTodoBottomSheet"

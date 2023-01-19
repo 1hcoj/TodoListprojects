@@ -11,15 +11,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyeon.todolist.R
+import com.hyeon.todolist.data.Todo
 import com.hyeon.todolist.databinding.FragmentHomeBinding
 import com.hyeon.todolist.ui.todorecyclerview.TodoListAdapter
 import com.hyeon.todolist.viewmodel.TodoViewModel
-import com.hyeon.todolist.viewmodel.TodoViewModelFactory
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import java.util.*
+
+const val typeKey = "ThisIsNotContent763217"
 
 class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
@@ -27,9 +29,7 @@ class HomeFragment : Fragment(){
         activity as MainActivity
     }
     private var isMonthMode : Boolean = true
-    private val mTodoViewModel : TodoViewModel by activityViewModels {
-        TodoViewModelFactory(activity?.application as Application)
-    }
+    private lateinit var mTodoViewModel : TodoViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +42,18 @@ class HomeFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var position : Int = 0
+        /** viewModel의 초기화*/
+        mTodoViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+            .create(TodoViewModel::class.java)
+
+//        mTodoViewModel.insert("운동", typeKey,false)
+//        val todoList = mTodoViewModel.getAll().value
+//        val type = todoList?.let {
+//            it[0].type
+//        }?: ""
+
+
+
         with(binding){
             /** 단위 ( 월, 주 ) 선택하는 버튼 초기화 및 이벤트 리스너 등록 */
             buttonChangeMW.apply {
@@ -65,15 +76,8 @@ class HomeFragment : Fragment(){
                  *  date : 선택 날짜 ( CalendarDay ),
                  *  selected : 선택 여부 ( Boolean ) */
                 setOnDateChangedListener { _, calDate, _ ->
-
                     mTodoViewModel.selectedDay = calDate
-                    // Todo
-                    /** 1. viewModel 의 날짜 데이터 변경
-                     *  2. viewModel 에서 해당 날짜의 List<List<할일>> 을 Adapter 에 넘겨줌
-                     *  3. ui에 출력
-                     * */
-
-
+                    recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel)
                 }
             }
 
@@ -81,7 +85,7 @@ class HomeFragment : Fragment(){
             recyclerViewTodoList.layoutManager = LinearLayoutManager(mActivity)
         }
     }
-
+    /** Calendar 월, 주 상태 변화 */
     private fun setCalendar() {
         val calendarMode = if (isMonthMode) CalendarMode.MONTHS else CalendarMode.WEEKS
 
