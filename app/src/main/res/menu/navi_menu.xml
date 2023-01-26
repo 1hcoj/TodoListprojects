@@ -6,7 +6,7 @@
             android:title = "Me"/>
         <item android:id = "@+id/myRecord"
             android:title="나의 기록"/>
-        <item android:id = "@+id/goal"
+        <item android:id = "@+id/goalFragment"
             android:title="목표"/>
         <item android:id= "@+id/timer"
             android:title="시간 알림"/>

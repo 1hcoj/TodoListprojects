@@ -14,7 +14,10 @@ import android.widget.FrameLayout.LayoutParams
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.hyeon.todolist.R
 import com.hyeon.todolist.data.Todo
@@ -25,15 +28,15 @@ import com.hyeon.todolist.ui.typeKey
 import com.hyeon.todolist.viewmodel.TodoViewModel
 
 
-class TodoListAdapter(val context : Context, val viewModel : TodoViewModel) : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>(){
+class TodoListAdapter(val context : Context, val viewModel : TodoViewModel,val lifecycleOwner : LifecycleOwner) : RecyclerView.Adapter<TodoListAdapter.TodoListViewHolder>(){
 
-    /** Todo
-     *  1. DB 에서 전체 타입 받아오기
-     *  2. type List 로 하나의 View Holder 생성
-     *  3. EditText 는 type 과 selectedDay 에 해당하는 할일 List 로 생성 */
+    private var types : List<String> = listOf()
 
-    private var types : List<String> = viewModel.getType().value?: listOf()
-
+    init {
+        viewModel.getType().observe(lifecycleOwner, Observer {
+            types = it
+        })
+    }
     inner class TodoListViewHolder(private val binding : TodolistItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         private var type : String = ""
@@ -239,7 +242,9 @@ class TodoListAdapter(val context : Context, val viewModel : TodoViewModel) : Re
      *      1. 사용자가 선택한 날짜의 todoList Data 를 화면과 Binding 한다.
      * */
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
-        var todos = viewModel.getTodolist(types[position],viewModel.selectedDayFormat).value
+        var todos : List<Todo> = listOf()
+        viewModel.getTodolist(types[position],viewModel.selectedDayFormat).observe(
+            lifecycleOwner, Observer { todos = it })
         holder.bind(types[position],todos)
     }
 

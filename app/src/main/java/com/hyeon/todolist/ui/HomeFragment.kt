@@ -20,6 +20,9 @@ import com.prolificinteractive.materialcalendarview.CalendarMode
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import java.util.*
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ListAdapter
+import kotlin.collections.ArrayList
 
 const val typeKey = "ThisIsNotContent763217"
 
@@ -42,17 +45,16 @@ class HomeFragment : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /** viewModel의 초기화*/
+        /** viewModel 의 초기화*/
         mTodoViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
             .create(TodoViewModel::class.java)
 
-//        mTodoViewModel.insert("운동", typeKey,false)
-//        val todoList = mTodoViewModel.getAll().value
-//        val type = todoList?.let {
-//            it[0].type
-//        }?: ""
-
-
+        //mTodoViewModel.insert("운동", typeKey,false)
+        var types : List<String> = listOf()
+        mTodoViewModel.getType().observe(viewLifecycleOwner, Observer {
+            types = it
+            Log.d("디버그 1",types.size.toString())
+        })
 
         with(binding){
             /** 단위 ( 월, 주 ) 선택하는 버튼 초기화 및 이벤트 리스너 등록 */
@@ -77,14 +79,15 @@ class HomeFragment : Fragment(){
                  *  selected : 선택 여부 ( Boolean ) */
                 setOnDateChangedListener { _, calDate, _ ->
                     mTodoViewModel.selectedDay = calDate
-                    recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel)
+                    recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel,viewLifecycleOwner)
                 }
             }
 
-            recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel)
+            recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel,viewLifecycleOwner)
             recyclerViewTodoList.layoutManager = LinearLayoutManager(mActivity)
         }
     }
+
     /** Calendar 월, 주 상태 변화 */
     private fun setCalendar() {
         val calendarMode = if (isMonthMode) CalendarMode.MONTHS else CalendarMode.WEEKS
