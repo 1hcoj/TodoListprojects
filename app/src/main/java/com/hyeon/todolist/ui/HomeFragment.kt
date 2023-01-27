@@ -18,8 +18,9 @@ import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import java.util.*
 
-private val TAG = "HomeFragment"
 class HomeFragment : Fragment(){
+    private val TAG = "HomeFragment"
+
     private lateinit var binding : FragmentHomeBinding
     private lateinit var mActivity : MainActivity
     private var isMonthMode : Boolean = true

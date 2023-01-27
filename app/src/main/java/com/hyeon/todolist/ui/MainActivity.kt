@@ -4,6 +4,7 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.timer -> {
                 navController.navigate(R.id.action_homeFragment_to_timeFragment)
+                binding.layoutDrawer.closeDrawers()
                 return true
             }
             else -> {
@@ -58,6 +60,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         else{
             super.onBackPressed()
+        }
+    }
+
+    /* navigation bar를 보이거나 숨기는 함수 */
+    fun HideNavigation(state : Boolean){
+        if (state){
+            binding.navigationView.visibility = View.GONE
+        } else{
+            binding.navigationView.visibility = View.VISIBLE
         }
     }
 }
