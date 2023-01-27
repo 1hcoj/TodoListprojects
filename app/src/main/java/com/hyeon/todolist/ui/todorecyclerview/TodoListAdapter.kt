@@ -2,8 +2,6 @@ package com.hyeon.todolist.ui.todorecyclerview
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable.Orientation
-import android.text.InputType
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
@@ -11,12 +9,8 @@ import android.widget.EditText
 import android.widget.FrameLayout.LayoutParams
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.inputmethod.EditorInfoCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.hyeon.todolist.R
 import com.hyeon.todolist.Todo
 import com.hyeon.todolist.databinding.TodolistItemBinding

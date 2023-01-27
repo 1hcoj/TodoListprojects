@@ -5,8 +5,11 @@ import android.content.ClipData
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.hyeon.todolist.Todo
 import com.hyeon.todolist.data.TodoRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class TodoViewModel(application : Application) : AndroidViewModel(application) {
     private var mTodoRepository : TodoRepository
@@ -32,7 +35,9 @@ class TodoViewModel(application : Application) : AndroidViewModel(application) {
     }
 
     fun insert(todo : Todo){
-        mTodoRepository.insert(todo)
+        viewModelScope.launch(Dispatchers.IO){
+            mTodoRepository.insert(todo)
+        }
     }
 
     fun delete(todo : Todo){

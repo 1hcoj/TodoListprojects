@@ -72,4 +72,9 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
+    <!-- 시간 알림 적용되는  -->
+    <style name="TimeAlarmToolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#FF000000</item>
+    </style>
+
 </resources>

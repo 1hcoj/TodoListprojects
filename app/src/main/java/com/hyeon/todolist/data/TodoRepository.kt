@@ -25,9 +25,7 @@ class TodoRepository (application : Application){
     }
 
     fun insert(dto : Todo){
-        Thread{
-            mTodoDao.insert(dto)
-        }.start()
+        mTodoDao.insert(dto)
     }
 
     fun delete(dto : Todo){
