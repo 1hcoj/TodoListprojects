@@ -1,5 +1,6 @@
 package com.hyeon.todolist.ui
 
+import android.app.Dialog
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,15 +12,19 @@ import androidx.core.view.GravityCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import com.hyeon.todolist.R
 import com.hyeon.todolist.databinding.ActivityMainBinding
+import com.hyeon.todolist.util.OnBackPressedListener
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
     private lateinit var binding : ActivityMainBinding
-    private val navController by lazy {
+    val navController by lazy {
         Navigation.findNavController(this, R.id.fragmentContainerView)
     }
+
+    private lateinit var onBackPressedListener : OnBackPressedListener
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
@@ -54,6 +59,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    private fun setOnBackPressedListener(onBackPressedListener : OnBackPressedListener){
+        this.onBackPressedListener = onBackPressedListener
+    }
+
     override fun onBackPressed(){
         if (binding.layoutDrawer.isDrawerOpen(GravityCompat.END)){
             binding.layoutDrawer.closeDrawers()
@@ -70,5 +79,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else{
             binding.navigationView.visibility = View.VISIBLE
         }
+    }
+
+    /* bottom dialog 생성 */
+    fun createDialog(b : BottomSheetDialogFragment){
+        b.show(supportFragmentManager, b.tag)
     }
 }
