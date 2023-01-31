@@ -13,8 +13,8 @@ interface TodoDao{
     @Query("SELECT * FROM todoTable WHERE time = (:time)")
     fun byTime(time : String) : LiveData<List<Todo>>
 
-    @Query("SELECT type FROM todoTable")
-    fun getType() : LiveData<List<String>>
+    @Query("SELECT * FROM todoTable WHERE content = (:key)")
+    fun getType(key : String) : LiveData<List<Todo>>
 
     @Query("SELECT * FROM todoTable")
     fun getAll() : LiveData<List<Todo>>

@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,18 +23,43 @@ import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter
 import java.util.*
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ListAdapter
+import com.google.android.material.navigation.NavigationView
+import com.hyeon.todolist.databinding.ActivityMainBinding
 import kotlin.collections.ArrayList
 
-const val typeKey = "ThisIsNotContent763217"
+class HomeFragment : Fragment(),IOnBackPressed,NavigationView.OnNavigationItemSelectedListener{
 
-class HomeFragment : Fragment(){
     private lateinit var binding : FragmentHomeBinding
     private val mActivity : MainActivity by lazy{
         activity as MainActivity
     }
     private var isMonthMode : Boolean = true
     private lateinit var mTodoViewModel : TodoViewModel
+    private val navController by lazy {
+        Navigation.findNavController(this.requireView())
+    }
+
+    /** Navigation Menu 선택 이벤트 처리 */
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        binding.layoutDrawer.closeDrawers()
+        when(item.itemId){
+            R.id.goalFragment->{ navController.navigate(R.id.action_homeFragment_to_goalFragment) }
+        }
+        return false
+    }
+    /** 휴대폰의 Back 버튼 클릭 이벤트 처리 */
+    override fun onBackPressed() :Boolean{
+        Log.d("디버그",binding.layoutDrawer.isDrawerOpen(GravityCompat.END).toString())
+        return if(binding.layoutDrawer.isDrawerOpen(GravityCompat.END)){
+            binding.layoutDrawer.closeDrawers()
+            true
+        }else{
+            false
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,15 +76,8 @@ class HomeFragment : Fragment(){
         mTodoViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
             .create(TodoViewModel::class.java)
 
-        //mTodoViewModel.insert("운동", typeKey,false)
-        var types : List<String> = listOf()
-        mTodoViewModel.getType().observe(viewLifecycleOwner, Observer {
-            types = it
-            Log.d("디버그 1",types.size.toString())
-        })
-
         with(binding){
-            /** 단위 ( 월, 주 ) 선택하는 버튼 초기화 및 이벤트 리스너 등록 */
+            /** 달력 레이아웃 방식 선택 버튼  */
             buttonChangeMW.apply {
                 setButton()
                 setOnClickListener {
@@ -67,6 +87,7 @@ class HomeFragment : Fragment(){
                 }
             }
 
+            /** 달력 */
             calendarView.apply{
                 state().edit().setFirstDayOfWeek(Calendar.MONDAY).commit()  // 첫번 째 요일 : 월요일
                 setTitleFormatter(MonthArrayTitleFormatter(resources.getStringArray(R.array.custom_months)))    // 월 ( 한글 Format )
@@ -78,13 +99,28 @@ class HomeFragment : Fragment(){
                  *  date : 선택 날짜 ( CalendarDay ),
                  *  selected : 선택 여부 ( Boolean ) */
                 setOnDateChangedListener { _, calDate, _ ->
-                    mTodoViewModel.selectedDay = calDate
-                    recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel,viewLifecycleOwner)
+                    mTodoViewModel.updateDate(calDate)
                 }
             }
 
-            recyclerViewTodoList.adapter = TodoListAdapter(mActivity,mTodoViewModel,viewLifecycleOwner)
+            /** 메뉴 버튼 */
+            buttonMenu.setOnClickListener {
+                layoutDrawer.openDrawer(GravityCompat.END)
+            }
+
+            navigationView.setNavigationItemSelectedListener(this@HomeFragment)     // 네비게이션
+
+            /** 목표 + TodoList 목록 */
+            val adapter = TodoListAdapter()
+
+            recyclerViewTodoList.adapter = adapter
             recyclerViewTodoList.layoutManager = LinearLayoutManager(mActivity)
+
+            mTodoViewModel.todoList.observe(viewLifecycleOwner){ todo->
+                todo.let {
+                    adapter.submitList(it)
+                }
+            }
         }
     }
 
@@ -113,4 +149,9 @@ class HomeFragment : Fragment(){
             setCompoundDrawablesWithIntrinsicBounds(0, 0, buttonImageRsc, 0)
         }
     }
+
+}
+
+interface IOnBackPressed{
+    fun onBackPressed() : Boolean
 }

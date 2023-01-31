@@ -4,13 +4,14 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.hyeon.todolist.data.Todo
+import com.hyeon.todolist.viewmodel.TodoViewModel
 
 class TodoRepository (application : Application){
     private var mTodoDatabase : TodoDatabase
     private var mTodoDao : TodoDao
     private var mTodoItems : LiveData<List<Todo>>
     private lateinit var mTodoList : LiveData<List<Todo>>
-    private var mTodoTypeList : LiveData<List<String>>
+    private var mTodoTypeList : LiveData<List<Todo>>
     private lateinit var mTimes : LiveData<List<Todo>>
     private lateinit var mTodo : LiveData<Todo>
 
@@ -19,7 +20,7 @@ class TodoRepository (application : Application){
         mTodoDatabase = TodoDatabase.getInstance(application)
         mTodoDao = mTodoDatabase.todoDao()
         mTodoItems = mTodoDao.getAll()
-        mTodoTypeList = mTodoDao.getType()
+        mTodoTypeList = mTodoDao.getType(TodoViewModel.TYPE_KEY)
     }
 
     fun getAll() : LiveData<List<Todo>>{
@@ -44,7 +45,7 @@ class TodoRepository (application : Application){
         }.start()
     }
 
-    fun getType() : LiveData<List<String>>{
+    fun getType(key : String) : LiveData<List<Todo>>{
         return mTodoTypeList
     }
 
