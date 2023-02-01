@@ -18,7 +18,7 @@ class AlarmPlusFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding : FragmentAlarmPlusBinding
     private val mHourAdapter by lazy{
-        HourAdapter()
+        HourAdapter(requireContext())
     }
     private val mMinuteAdapter by lazy{
         MinuteAdapter()
@@ -46,9 +46,6 @@ class AlarmPlusFragment : BottomSheetDialogFragment() {
         binding.apply{
             hourContainer.adapter = mHourAdapter
             minuteContainer.adapter = mMinuteAdapter
-            /*
-            mTimeAdapter.setItemClickListener()
-             */
 
             val hourLayout = GridLayoutManager(context,6)
             val minuteLayout = GridLayoutManager(context, 6)
@@ -57,9 +54,10 @@ class AlarmPlusFragment : BottomSheetDialogFragment() {
             hourContainer.setHasFixedSize(true)
             minuteContainer.setHasFixedSize(true)
 
-            val decorationHeight = RecyclerDecorationSize(20, 5)
-            hourContainer.addItemDecoration(decorationHeight)
-            minuteContainer.addItemDecoration(decorationHeight)
+            val hourDecorationSize = RecyclerDecorationSize(20, 5)
+            val minuteDecorationSize = RecyclerDecorationSize(20,5)
+            hourContainer.addItemDecoration(hourDecorationSize)
+            minuteContainer.addItemDecoration(minuteDecorationSize)
         }
     }
     class RecyclerDecorationSize(val divHeight : Int, val divWidth : Int) : RecyclerView.ItemDecoration() {

@@ -123,4 +123,5 @@ class TodoListAdapter(val context : Context) : RecyclerView.Adapter<TodoListAdap
     override fun getItemCount(): Int {
         return todos.size
     }
+
 }
