@@ -45,7 +45,7 @@
             android:textColor="@color/white"
             android:textStyle="bold|normal"
             android:text="@string/selectTime"
-            android:paddingTop="25dp"
+            android:gravity = "center_vertical"
             android:paddingStart="20dp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,20 +54,20 @@
             android:layout_weight="3">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/appCompatButton2"
+                android:id="@+id/btnAM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_dialog_drawer_choice_button"
                 android:text="@string/AM"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/appCompatButton"
+                app:layout_constraintEnd_toStartOf="@+id/btnPM"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/appCompatButton"
+                android:id="@+id/btnPM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bottom_dialog_drawer_choice_button"
@@ -75,7 +75,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/appCompatButton2"
+                app:layout_constraintStart_toEndOf="@+id/btnAM"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
@@ -139,6 +139,27 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonConatiner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnDone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/done"
+            android:textSize="20sp"
+            android:textStyle="bold|normal"
+            android:textColor="@color/white"
+            android:background="@drawable/bottom_dialog_drawer_choice_button"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
     </LinearLayout>
 
 </LinearLayout>

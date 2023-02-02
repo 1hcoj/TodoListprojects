@@ -2,6 +2,8 @@ package com.hyeon.todolist.ui.todorecyclerview
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +11,11 @@ import android.widget.AdapterView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.hyeon.todolist.R
+import com.hyeon.todolist.databinding.FragmentAlarmPlusBinding
 import com.hyeon.todolist.databinding.TimeItemBinding
+import com.hyeon.todolist.ui.AlarmPlusFragment
 
-class HourAdapter(val context : Context) : RecyclerView.Adapter<HourAdapter.HourViewHolder>() {
+class HourAdapter() : RecyclerView.Adapter<HourAdapter.HourViewHolder>() {
 
     private val hourList = listOf(1,2,3,4,5,6,7,8,9,10,11,12)
     private var dataIndex = 0
@@ -30,6 +34,7 @@ class HourAdapter(val context : Context) : RecyclerView.Adapter<HourAdapter.Hour
             dataIndex = holder.adapterPosition
             notifyItemChanged(dataIndex)
             setData(holder)
+            onItemClickListener.onItemClick(hourList[position])
         }
     }
     override fun getItemCount(): Int = hourList.size
@@ -41,9 +46,18 @@ class HourAdapter(val context : Context) : RecyclerView.Adapter<HourAdapter.Hour
     }
     private fun setData(holder : HourViewHolder){
         if (dataIndex == holder.adapterPosition){
-            holder.binding.tvTimeItem.setBackgroundColor(Color.parseColor("#2828CD"))
+            holder.binding.tvTimeItem.setBackgroundColor(Color.parseColor("#FF2828CD"))
         } else{
             holder.binding.tvTimeItem.setBackgroundColor(Color.parseColor("#FFb4b4b4"))
         }
+    }
+    private lateinit var onItemClickListener : OnItemClickListener
+
+    interface OnItemClickListener{
+        fun onItemClick(_hour : Int)
+    }
+
+    fun setOnItemClickListener(listener : OnItemClickListener){
+        this.onItemClickListener = listener
     }
 }

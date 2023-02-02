@@ -1,6 +1,7 @@
 package com.hyeon.todolist.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -49,11 +50,6 @@ class TimeFragment : Fragment(), OnBackPressedListener {
                 navController.navigate(R.id.action_timeFragment_to_homeFragment)
             }
         }
-        /*
-        이 fragment 메뉴에서 다시 이 fragment를 선택했을 떄 오류, 추가적으로 이 fragment에서 다른 메뉴를 눌러 fragment 전환을 하고자 한다면 어떻게 해야할까ㅓ??
-
-        >> 메뉴에 달린 event를 다시 재설정 하거나 혹은 현재 fragment를 넘겨줘서 에러를 띄우도록?
-         */
     }
 
     override fun onDestroy() {
@@ -61,13 +57,20 @@ class TimeFragment : Fragment(), OnBackPressedListener {
         mActivity.HideNavigation(false)
     }
 
-    override fun onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment: Boolean) {
-        super.onPrimaryNavigationFragmentChanged(isPrimaryNavigationFragment)
+    override fun onStart(){
+        super.onStart()
+        val hour = arguments?.getInt("hour")
+        val minute = arguments?.getInt("minute")
+        val time = arguments?.getString("time")
+        Log.d("TimeFragment","${hour},${minute},${time}")
     }
 
     override fun onBackPressed() {
-        if (this is TimeFragment){
-        }
         parentFragmentManager.beginTransaction().remove(this).commit()
+    }
+
+    /* text layout 만드는 함수 */
+    fun makeTextView(){
+
     }
 }

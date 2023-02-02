@@ -1,11 +1,13 @@
 package com.hyeon.todolist.ui.todorecyclerview
 
 import android.graphics.Color
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hyeon.todolist.databinding.TimeItemBinding
+import com.hyeon.todolist.ui.AlarmPlusFragment
 
 class MinuteAdapter : RecyclerView.Adapter<MinuteAdapter.MinuteViewHolder>(){
     private val minuteList = listOf(0,5,10,15,20,25,30,35,40,45,50,55)
@@ -24,6 +26,7 @@ class MinuteAdapter : RecyclerView.Adapter<MinuteAdapter.MinuteViewHolder>(){
             dataIndex = holder.adapterPosition
             notifyItemChanged(dataIndex)
             setData(holder)
+            onItemClickListener.onItemClick(minuteList[position])
         }
     }
     override fun getItemCount(): Int = minuteList.size
@@ -39,5 +42,15 @@ class MinuteAdapter : RecyclerView.Adapter<MinuteAdapter.MinuteViewHolder>(){
         } else{
             holder.binding.tvTimeItem.setBackgroundColor(Color.parseColor("#FFb4b4b4"))
         }
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(_minute : Int)
+    }
+
+    private lateinit var onItemClickListener : OnItemClickListener
+
+    fun setOnItemClickListener(listener : OnItemClickListener){
+        this.onItemClickListener = listener
     }
 }
